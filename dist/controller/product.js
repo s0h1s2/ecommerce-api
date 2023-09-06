@@ -16,6 +16,7 @@ exports.getProductById = exports.getProducts = void 0;
 const db_1 = __importDefault(require("../config/db"));
 function getProducts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        // TODO: implmenet paginaiton 
         const products = yield db_1.default.product.findMany();
         return res.json(products);
     });

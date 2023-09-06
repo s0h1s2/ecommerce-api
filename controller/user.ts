@@ -4,6 +4,7 @@ import db from "../config/db"
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt"
 import { generateToken } from "../util/jwt";
+import { CreateUser } from "../validation/createUserSchema";
 export async function userAuthentication(req: Request, res: Response) {
     const { email, password }: AuthBody = req.body
     const user=await db.user.findUnique({where:{email:email}});
@@ -19,5 +20,21 @@ export async function userAuthentication(req: Request, res: Response) {
     return res.json({id:user?.id,name:user?.name})
 } 
 export async function userRegister(req:Request,res:Response){
-  res.status(StatusCodes.CREATED).send({})
+  // check for email
+  const {email,name,password}:CreateUser=req.body
+  const result=await db.user.findUnique({where:{email:email}})
+  if(result){
+    return res.status(StatusCodes.BAD_REQUEST).send({error:"Provided email exist.Try another email"})
+  } 
+  // save user in database
+  const hashedPassword=await bcrypt.hash(password,10)
+  await db.user.create({
+    data:{
+      name,
+      email,
+      password:hashedPassword,
+      isAdmin:false
+    }
+  })
+  return res.status(StatusCodes.CREATED).send({})
 }
