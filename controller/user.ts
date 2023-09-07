@@ -24,7 +24,7 @@ export async function userRegister(req:Request,res:Response){
   const {email,name,password}:CreateUser=req.body
   const result=await db.user.findUnique({where:{email:email}})
   if(result){
-    return res.status(StatusCodes.BAD_REQUEST).send({error:"Provided email exist.Try another email"})
+    return res.status(StatusCodes.BAD_REQUEST).send({error:{email:"Provided email exist.Try another email"}})
   } 
   // save user in database
   const hashedPassword=await bcrypt.hash(password,10)

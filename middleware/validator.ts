@@ -5,6 +5,7 @@ import { ZodIssue, ZodSchema } from "zod";
 export function validator(schema: ZodSchema) {
     return function (req: Request, res: Response, next: NextFunction) {
         try {
+            console.log(req.body)
             schema.parse(req.body)
             next()
             return
@@ -14,8 +15,8 @@ export function validator(schema: ZodSchema) {
                 const key = issue.path[0].toString()
                 errors[key] = issue.message;
             })
-            res.status(StatusCodes.BAD_REQUEST).json({ error: errors })
-            return
+            console.log(errors)
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: errors })
         }
     }
 }
