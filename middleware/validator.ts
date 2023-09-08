@@ -3,9 +3,8 @@ import { StatusCodes } from "http-status-codes"
 import { ZodIssue, ZodSchema } from "zod";
 
 export function validator(schema: ZodSchema) {
-    return function (req: Request, res: Response, next: NextFunction) {
+    return function(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log(req.body)
             schema.parse(req.body)
             next()
             return
