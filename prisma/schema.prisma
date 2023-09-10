@@ -9,24 +9,54 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
-model User{
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String
   password String
-  isAdmin Boolean
+  isAdmin  Boolean
+  Order    Order[]
 }
-model Product{
-  id Int @id @default(autoincrement())
-  name String
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String
   description String
-  price Float 
-  stock Int 
-  image String
-  category String
-  brand String
-  noReviews Int @default(0)
-  rating Int
+  price       Float
+  stock       Int
+  image       String
+  category    String
+  brand       String
+  noReviews   Int         @default(0)
+  rating      Int
+  orderItems  OrderItem[]
 }
 
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  Order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  qty       Int
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId Int?
+}
 
+model Order {
+  id            Int         @id @default(autoincrement())
+  orderItems    OrderItem[]
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
+  isPaid        Boolean     @default(false)
+  isDelivered   Boolean     @default(false)
+  deliveredTime DateTime
+  orderDate     DateTime    @default(now())
+  address       String
+  postalCode    String
+  city          String
+  country       String
+  itemsPrice    Decimal
+  taxPrice      Decimal
+  shippingPrice Decimal
+  totalPrice    Decimal
+}

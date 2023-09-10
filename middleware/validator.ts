@@ -10,6 +10,7 @@ export function validator(schema: ZodSchema) {
             return
         } catch (err: any) {
             const errors: Record<string, string> = {}
+            console.log(err)
             err.issues.forEach((issue: ZodIssue) => {
                 const key = issue.path[0].toString()
                 errors[key] = issue.message;
