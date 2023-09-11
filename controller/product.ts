@@ -8,8 +8,8 @@ export async function getProducts(req: Request, res: Response) {
   return res.json(products)
 }
 export async function getProductById(req: Request<{ id: number }>, res: Response) {
-  // what is this in god's name.
   const { id } = req.params
+  // what is this in god's name.
   const productId = parseInt(id.toString(), 10)
   const product = await db.product.findUnique({ where: { id: productId } });
   if (!product) {
