@@ -15,7 +15,7 @@ const port = 3000
 app.use(express.json())
 app.use(cookieParser())
 // TODO: change origin when deploy
-app.use(cors({ origin: "http://localhost:5173", credentials: true }))
+app.use(cors({ origin: "*", credentials: true }))
 app.use("/api", router)
 app.listen(port, () => {
 	console.log(`[Server] Server listening on port ${port}`)
