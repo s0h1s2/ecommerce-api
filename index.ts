@@ -1,4 +1,4 @@
-import express, { Express, NextFunction, Request,Response } from "express"
+import express, { Express, NextFunction, Request, Response } from "express"
 import router from "./route"
 import cors from "cors"
 import cookieParser from "cookie-parser"
@@ -16,13 +16,13 @@ const port = 3000
 app.use(express.json())
 app.use(cookieParser())
 // TODO: change origin when deploy
-app.use(cors({ origin: "https://master--subtle-jelly-5c6ee7.netlify.app", credentials: true }))
+app.use(cors({ origin: ["https://master--subtle-jelly-5c6ee7.netlify.app", "http://localhost:5173"], credentials: true }))
 app.use(methodOverride())
-function errorHandler (err:any, req:Request, res:Response, next:NextFunction) {
-	res.status(500).send({error:"Something is broken."})
+function errorHandler(err: any, req: Request, res: Response, next: NextFunction) {
+	res.status(500).send({ error: "Something is broken." })
 	next()
 }
-  
+
 app.use(errorHandler)
 app.use("/api", router)
 

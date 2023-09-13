@@ -9,8 +9,14 @@ export function getOrders(req: Request, res: Response) {
 export function getUserOrders(req: Request, res: Response) {
   return res.send({ foo: "bar" })
 }
-export function getOrderById(req: Request, res: Response) {
-  return res.send({ foo: "bar" })
+export async function getOrderById(req: Request, res: Response) {
+  const id = parseInt(req.params.id)
+
+  const order = await db.order.findFirst({ where: { id: id } })
+  if (!order) {
+    return res.status(StatusCodes.NOT_FOUND).send({ error: "No order found" })
+  }
+  return res.status(StatusCodes.OK).send({ order })
 }
 
 export async function createOrder(req: Request, res: Response) {

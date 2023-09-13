@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 
 export async function getProducts(req: Request, res: Response) {
   // TODO: implmenet paginaiton 
-  const products = await db.product.findMany();
+  const products = await db.product.findMany({ orderBy: [{ id: "desc" }] });
   return res.json(products)
 }
 export async function getProductById(req: Request<{ id: number }>, res: Response) {
