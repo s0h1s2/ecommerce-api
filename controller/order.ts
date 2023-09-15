@@ -11,8 +11,28 @@ export function getUserOrders(req: Request, res: Response) {
 }
 export async function getOrderById(req: Request, res: Response) {
   const id = parseInt(req.params.id)
+  const order = await db.order.findFirst({
+    where: { id: id }, include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
 
-  const order = await db.order.findFirst({ where: { id: id } })
+        }
+      },
+      orderItems: {
+        include: {
+          Product: {
+            select: {
+              name: true,
+              image: true,
+              price: true
+            }
+          }
+        }
+      }
+    }
+  })
   if (!order) {
     return res.status(StatusCodes.NOT_FOUND).send({ error: "No order found" })
   }
@@ -44,7 +64,7 @@ export async function createOrder(req: Request, res: Response) {
           postalCode,
           itemsPrice: totalPrice,
           orderItems: {
-            create: products.map((p) => ({ qty: p.qty }))
+            create: products.map((p) => ({ productId: p.id, qty: p.qty }))
           },
           shippingPrice: totalPrice,
           taxPrice: 1,
@@ -52,7 +72,8 @@ export async function createOrder(req: Request, res: Response) {
           isDelivered: false,
           userId: req.user.id,
           deliveredTime: new Date()
-        }
+        },
+
       })
       // TODO: may update stock then send web socket request to client to update items stock
       return orderResult
